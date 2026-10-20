@@ -1,0 +1,9 @@
+# dancing-lyrics-toast bundle patch: inserts this package's row into the profile.
+#
+# The row names a relative file inside this package (resolved against THIS
+# package as its base). Keep this path in sync when the entry file is renamed —
+# a fresh specifier is also what lets a running host pick up edited code
+# without an app restart (Node caches ESM modules by resolved URL).
+- insert:
+    - id: dancing-lyrics-toast
+      name: './lib/entry.js'

@@ -1,0 +1,123 @@
+:root {
+  /* The Limbus look: a character core, a dark outline, and a soft halo.
+     All four are configurable; --halo is overridden per toast kind. */
+  --core: #ffffff;
+  --outline: rgba(20, 16, 12, 0.9);
+  --outline-width: 1.5px;
+  --halo: rgba(255, 240, 210, 0.55);
+  --halo-size: 6px;
+  --font-family: "Noto Sans SC", "Microsoft YaHei", "PingFang SC", sans-serif;
+  --font-weight: 700;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html, body {
+  width: 100%;
+  height: 100%;
+  background: transparent;
+  overflow: hidden;
+  font-family: var(--font-family);
+  user-select: none;
+}
+
+#stage {
+  position: absolute;
+  inset: 0;
+}
+
+/* One toast line: a stack of per-character spans, placed absolutely by the
+   renderer (sides scatter or anchored stack). Width is capped so long copy
+   wraps instead of running off screen. */
+.toast {
+  position: absolute;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  max-width: min(58vw, 1100px);
+  font-family: var(--font-family);
+  font-size: var(--font-size, 34px);
+  font-weight: var(--font-weight, 700);
+  letter-spacing: 0.06em;
+  color: var(--core);
+  text-shadow:
+    0 0 var(--halo-size) var(--halo),
+    0 0 calc(var(--halo-size) * 2.4) var(--halo),
+    calc(-1 * var(--outline-width)) calc(-1 * var(--outline-width)) 0 var(--outline),
+    var(--outline-width) calc(-1 * var(--outline-width)) 0 var(--outline),
+    calc(-1 * var(--outline-width)) var(--outline-width) 0 var(--outline),
+    var(--outline-width) var(--outline-width) 0 var(--outline),
+    0 0 2px var(--outline);
+}
+
+.toast .char {
+  display: inline-block;
+  white-space: pre;
+  will-change: transform, opacity, filter;
+}
+
+/* Entry: ripple — each character fades in where it stands, left to right. */
+.toast.enter-ripple .char {
+  animation: char-in-ripple var(--char-in, 260ms) cubic-bezier(0.2, 0.7, 0.3, 1) both;
+  animation-delay: var(--char-delay, 0ms);
+}
+
+@keyframes char-in-ripple {
+  from { opacity: 0; transform: translateY(10px) scale(0.86); filter: blur(3px); }
+  60%  { opacity: 1; filter: blur(0); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* Entry: drop — each character falls in from above and settles. */
+.toast.enter-drop .char {
+  animation: char-in-drop var(--char-in, 420ms) cubic-bezier(0.2, 0.8, 0.3, 1.08) both;
+  animation-delay: var(--char-delay, 0ms);
+}
+
+@keyframes char-in-drop {
+  from { opacity: 0; transform: translateY(calc(-1 * var(--drop-distance, 64px))) rotate(-6deg); filter: blur(3px); }
+  70%  { opacity: 1; filter: blur(0); }
+  to   { opacity: 1; transform: translateY(0) rotate(0deg); }
+}
+
+/* Idle: a traveling wave, armed per character once the entry landed. */
+@keyframes char-wave {
+  from { transform: translateY(0); }
+  to   { transform: translateY(calc(-1 * var(--wave-amp, 4px))); }
+}
+
+/* Exit: ripple — fade away in place, in order. */
+.toast.exit-ripple .char {
+  animation: char-out-ripple var(--char-out, 200ms) ease-in both;
+  animation-delay: var(--char-delay, 0ms);
+}
+
+@keyframes char-out-ripple {
+  from { opacity: 1; }
+  to   { opacity: 0; filter: blur(2px); }
+}
+
+/* Exit: drop — each character accelerates down with a slight rotation. */
+.toast.exit-drop .char {
+  animation: char-out-drop var(--char-out, 420ms) cubic-bezier(0.5, 0, 0.9, 0.4) both;
+  animation-delay: var(--char-delay, 0ms);
+}
+
+@keyframes char-out-drop {
+  from { opacity: 1; transform: translateY(0) rotate(0deg); }
+  to   {
+    opacity: 0;
+    transform: translateY(var(--drop-distance, 64px)) rotate(var(--drop-tilt, 8deg));
+    filter: blur(2px);
+  }
+}
+
+/* Connection state, tiny and unobtrusive. */
+#status {
+  position: absolute;
+  right: 10px;
+  top: 6px;
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.35);
+  text-shadow: 0 0 2px rgba(0, 0, 0, 0.6);
+}

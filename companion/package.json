@@ -1,0 +1,14 @@
+{
+  "name": "dancing-lyrics-toast-companion",
+  "version": "0.1.0",
+  "description": "dancing-lyrics-toast 的桌面伴侣：透明置顶窗口，播放 Limbus 风格的文字动画。",
+  "type": "commonjs",
+  "license": "MIT",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "devDependencies": {
+    "electron": "^33.0.0"
+  }
+}

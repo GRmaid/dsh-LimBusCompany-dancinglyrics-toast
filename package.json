@@ -1,0 +1,49 @@
+{
+  "name": "dsh-limbuscompany-dancinglyrics-toast",
+  "version": "0.1.0",
+  "description": "把会话事件（权限请求、回合开始/结束）以 Limbus Company 歌词风格的文字动画浮在所有窗口之上：两侧随机落位，文案与动画在 DSH 设置页自由编辑。",
+  "type": "module",
+  "license": "MIT",
+  "author": "GRmaid",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/GRmaid/dsh-LimBusCompany-dancinglyrics-toast.git"
+  },
+  "homepage": "https://github.com/GRmaid/dsh-LimBusCompany-dancinglyrics-toast#readme",
+  "keywords": [
+    "dsh-plugin",
+    "deepseek-harness",
+    "notification",
+    "desktop",
+    "overlay",
+    "desktop-lyrics",
+    "limbus-company"
+  ],
+  "files": [
+    "lib",
+    "cordis.patch.yml",
+    "README.md",
+    "LICENSE"
+  ],
+  "main": "lib/entry.js",
+  "exports": {
+    ".": "./lib/entry.js",
+    "./client": "./lib/client.js",
+    "./package.json": "./package.json"
+  },
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    },
+    "client": {
+      "inject": [
+        "@deepseek-ai/dsh-client-ui-slots",
+        "@deepseek-ai/dsh-client-locale"
+      ],
+      "platform": "web"
+    }
+  },
+  "peerDependencies": {
+    "@deepseek-ai/schemastery": "*"
+  }
+}
